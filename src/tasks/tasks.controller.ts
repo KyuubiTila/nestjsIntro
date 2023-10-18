@@ -9,12 +9,10 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  // Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { Task } from './tasks.entity';
-// import { getTaskFilterDto } from './dto/get_task_filter.dto';
 import { TaskStatusValidationPipe } from './pipes/task_status_validation.pipe';
 import { TaskStatus } from './taskStatus.enum';
 
