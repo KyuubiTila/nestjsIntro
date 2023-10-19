@@ -38,7 +38,9 @@ export class AuthController {
     return this.authService.updateUserByIdService(id, userUpdateDto);
   }
   @Post('/signIn')
-  signIn(@Body() authCredentialDto: AuthCredentialDto) {
+  signIn(
+    @Body() authCredentialDto: AuthCredentialDto,
+  ): Promise<{ accessToken: string }> {
     return this.authService.validateUserPassword(authCredentialDto);
   }
 }
