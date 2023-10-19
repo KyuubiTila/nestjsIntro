@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   Put,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
@@ -17,7 +15,6 @@ import { UserUpdateDto } from './dto/user-update.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('/signUp')
-  @UsePipes(ValidationPipe)
   signUp(@Body() authCredentialDto: AuthCredentialDto) {
     return this.authService.signUpService(authCredentialDto);
   }
@@ -39,5 +36,9 @@ export class AuthController {
     @Body() userUpdateDto: UserUpdateDto, // Use the UserUpdateDto
   ) {
     return this.authService.updateUserByIdService(id, userUpdateDto);
+  }
+  @Post('/signIn')
+  signIn(@Body() authCredentialDto: AuthCredentialDto) {
+    return this.authService.validateUserPassword(authCredentialDto);
   }
 }

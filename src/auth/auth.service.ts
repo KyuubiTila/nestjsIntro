@@ -1,9 +1,11 @@
+import * as bcrypt from 'bcrypt';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
 import {
-  ConflictException,
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,18 +19,22 @@ export class AuthService {
     private userRepository: Repository<User>,
   ) {}
 
+  private async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
+  }
+
   async signUpService(authCredentialDto: AuthCredentialDto): Promise<void> {
     const { username, password } = authCredentialDto;
     const user = new User();
     user.username = username;
-    user.password = password;
+    user.password = await this.hashPassword(password);
 
     try {
       await user.save();
     } catch (error) {
       // duplicate username
       if (error.code === 'ER_DUP_ENTRY') {
-        throw new ConflictException('username already exist');
+        throw new BadRequestException('username already exists');
       } else {
         throw new InternalServerErrorException();
       }
@@ -67,5 +73,24 @@ export class AuthService {
     await user.save();
 
     return user;
+  }
+
+  async validateUserPassword(
+    authCredentialDto: AuthCredentialDto,
+  ): Promise<string> {
+    const { username, password } = authCredentialDto;
+    const user = await this.userRepository.findOne({ where: { username } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid login credentials');
+    }
+
+    return user.username;
   }
 }
