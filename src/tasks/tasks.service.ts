@@ -4,6 +4,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './tasks.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskStatus } from './taskStatus.enum';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -12,8 +13,10 @@ export class TasksService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  async getTasks(): Promise<Task[]> {
-    const tasks = await this.taskRepository.find();
+  async getTasks(user: User): Promise<Task[]> {
+    const tasks = await this.taskRepository.find({
+      where: { userId: user.id },
+    });
     return tasks;
   }
 
@@ -41,14 +44,16 @@ export class TasksService {
     await task.save();
     return task;
   }
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { description, title } = createTaskDto;
     const task = new Task();
 
     task.title = title;
     task.description = description;
     task.status = TaskStatus.OPEN;
+    task.user = user;
     await task.save();
+    // delete task.user;
     return task;
   }
 }

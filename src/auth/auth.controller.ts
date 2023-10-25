@@ -7,12 +7,9 @@ import {
   Param,
   Post,
   Put,
-  Req,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -45,11 +42,5 @@ export class AuthController {
     @Body() authCredentialDto: AuthCredentialDto,
   ): Promise<{ accessToken: string }> {
     return this.authService.validateUserPassword(authCredentialDto);
-  }
-
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@Req() req) {
-    console.log(req);
   }
 }
