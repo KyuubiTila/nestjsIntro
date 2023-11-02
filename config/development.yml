@@ -1,0 +1,10 @@
+db:
+  # connection:
+  host: 'localhost'
+  port: 3306
+  username: root
+  password: ''
+  synchronize: true
+
+jwt:
+  secret: 'topsecret51'

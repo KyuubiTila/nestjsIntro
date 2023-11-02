@@ -1,0 +1,32 @@
+# This is a comment
+
+# Configuration for a sample application
+# app:
+#   name: My Sample App
+#   version: 1.0
+#   description: A YAML configuration template
+
+# Server settings
+server:
+  host: localhost
+  port: 3000
+
+# Database configuration
+db:
+  type: 'mysql'
+  port: 3306
+  database: 'taskmanagement'
+
+jwt:
+  expires in: 3600
+# # Logging settings
+# logging:
+#   level: info
+#   path: logs/app.log
+
+# # API endpoints
+# endpoints:
+#   - /api/users
+#   - /api/products
+#   - /api/orders
+# # List of allowed roles
