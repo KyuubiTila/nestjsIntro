@@ -48,4 +48,29 @@ describe('TaskService', () => {
       expect(taskRepository.findOne).not.toHaveBeenCalled();
     });
   });
+
+  describe('createTask', () => {
+    it('calls taskRepository.createTask() and successfully return the result', async () => {
+      // const mockTask = {
+      //   id: 1,
+      //   title: 'test task',
+      //   description: 'test description',
+      //   user: mockUser,
+      // };
+      taskRepository.createTask.mockResolvedValue('mockTask');
+
+      expect(taskRepository.createTask).not.toHaveBeenCalled();
+
+      const createTaskDto = {
+        description: 'test description',
+        title: 'test task',
+      };
+      const result = await tasksService.createTask(createTaskDto, mockUser);
+      expect(taskRepository.createTask).toHaveBeenCalledWith(
+        createTaskDto,
+        mockUser,
+      );
+      expect(result).toEqual('mockTask');
+    });
+  });
 });
